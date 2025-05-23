@@ -2,7 +2,7 @@ import numpy as np
 import nibabel as nib
 from scipy.ndimage import binary_dilation
 import os
-from task1_1 import visualize_tibia_femur_slices
+from viz_seg import show_overlay_resampled , resample_mask_to_ct
 
 
 def load_ct_scan(file_path):
@@ -38,7 +38,7 @@ def randomize_expansion(original_mask, expanded_mask, random_fraction=0.5):
     return randomized_mask.astype(np.uint8)
 
 
-def process_and_save_randomized(mask_path, ct_data, max_expansion_mm=2.0, random_fraction=0.5):
+def process_and_save_randomized(mask_path, ct_img, bone_type, max_expansion_mm=2.0, random_fraction=0.5):
     img = load_ct_scan(mask_path)
     voxel_spacing = img.header.get_zooms()
     original_mask = img.get_fdata().astype(bool)
@@ -51,17 +51,18 @@ def process_and_save_randomized(mask_path, ct_data, max_expansion_mm=2.0, random
     nib.save(randomized_img, output_path)
 
     print(f"Saved randomized mask to: {output_path}")
+    mask_img = nib.load(output_path)
+    mask_resampled = resample_mask_to_ct(ct_img, mask_img)
 
-    # Optional visualization
-    # if "femur" in mask_path:
-    #     visualize_tibia_femur_slices(ct_data, randomized_mask, None, filename=os.path.join("results", 'femur_slices_randomized.png'))
-    # else:
-    #     visualize_tibia_femur_slices(ct_data, None, randomized_mask, filename=os.path.join("results", 'tibia_slices_randomized.png'))
+    if "femur" in bone_type:
+        show_overlay_resampled(ct_img, mask_resampled, fig_name=os.path.join("results", 'task1_3_femur_slices_random_expanded_2.png'))
+    else:
+        show_overlay_resampled(ct_img, mask_resampled, fig_name=os.path.join("results", 'task1_3_tibia_slices_random_expanded_2.png'),slice_index=0)
+
 
 
 if __name__ == "__main__":
-    img = load_ct_scan("3702_left_knee.nii.gz")
-    ct_data = img.get_fdata()
+    ct_img = load_ct_scan("3702_left_knee.nii.gz")
 
-    process_and_save_randomized('results/original_femur_segmentation.nii.gz', ct_data=ct_data, max_expansion_mm=2.0, random_fraction=0.5)
-    process_and_save_randomized('results/original_tibia_segmentation.nii.gz', ct_data=ct_data, max_expansion_mm=2.0, random_fraction=0.5)
+    process_and_save_randomized('results/original_femur_segmentation.nii.gz', ct_img=ct_img, bone_type="femur", max_expansion_mm=2.0, random_fraction=0.5)
+    process_and_save_randomized('results/original_tibia_segmentation.nii.gz', ct_img=ct_img, bone_type="tibia",max_expansion_mm=2.0, random_fraction=0.5)
