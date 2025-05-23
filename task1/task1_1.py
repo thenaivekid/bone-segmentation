@@ -3,11 +3,8 @@ import nibabel as nib
 import matplotlib.pyplot as plt
 from skimage import filters, measure, morphology, segmentation
 from scipy import ndimage
-from sklearn.mixture import GaussianMixture
 import os
 import time
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.colors import ListedColormap
 from skimage.feature import peak_local_max
 
 def load_ct_scan(file_path):
@@ -15,9 +12,6 @@ def load_ct_scan(file_path):
     ct_data = ct_img.get_fdata()
     return ct_data, ct_img.affine
 
-def label_bone_regions(bone_mask):
-    labeled_mask, _ = ndimage.label(bone_mask)
-    return labeled_mask
 
 def save_segmentation(segmentation, affine, output_file):
     seg_img = nib.Nifti1Image(segmentation.astype(np.int16), affine)
@@ -110,7 +104,7 @@ def visualize_tibia_femur_slices(ct_data, femur_mask, tibia_mask, num_slices=6, 
     plt.savefig(filename, dpi=150)
     plt.show()
 
-def advanced_bone_segmentation(file_path, output_dir='results'):
+def bone_segmentation(file_path, output_dir='results'):
     os.makedirs(output_dir, exist_ok=True)
     ct_data, affine = load_ct_scan(file_path)
     start = time.time()
@@ -125,4 +119,4 @@ def advanced_bone_segmentation(file_path, output_dir='results'):
 
 if __name__ == "__main__":
     img_path = '3702_left_knee.nii.gz'
-    ct_data, labeled_mask, femur_mask, tibia_mask = advanced_bone_segmentation(img_path)
+    ct_data, labeled_mask, femur_mask, tibia_mask = bone_segmentation(img_path)

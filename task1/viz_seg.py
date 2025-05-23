@@ -10,7 +10,7 @@ def resample_mask_to_ct(ct_img, mask_img):
     """Resample the segmentation mask to match CT scan shape and orientation"""
     return resample_from_to(mask_img, ct_img, order=0)  # nearest neighbor interpolation
 
-def show_overlay_resampled(ct_img, mask_img, slice_index=108, alpha=0.4):
+def show_overlay_resampled(ct_img, mask_img, fig_name= None, slice_index=108, alpha=0.4):
     """Overlay after resampling the mask"""
     ct_data = ct_img.get_fdata()
     mask_data = mask_img.get_fdata()
@@ -27,15 +27,18 @@ def show_overlay_resampled(ct_img, mask_img, slice_index=108, alpha=0.4):
     plt.title(f' Overlay (Slice y={slice_index})')
     plt.axis('off')
     plt.tight_layout()
+    if fig_name is not None:
+        plt.savefig(fig_name, dpi=150)
     plt.show()
 
 if __name__ == '__main__':
     ct_img = load_nifti_img('3702_left_knee.nii.gz')
     # mask_img = load_nifti_img('results/femur_segmentation.nii.gz')
-    mask_img = load_nifti_img('/home/ashok/bone_seg/results/femur_segmentation_randomized_2mm_frac50.nii.gz')
+    mask_path = "/home/ashok/bone_seg/task1/results/femur_segmentation_expanded_2mm.nii.gz"
+    mask_img = load_nifti_img(mask_path)
 
     # print(f"ct_image.header.get_zooms()=")
     # Align the mask to CT
     mask_resampled = resample_mask_to_ct(ct_img, mask_img)
 
-    show_overlay_resampled(ct_img, mask_resampled)
+    show_overlay_resampled(ct_img, mask_resampled, fig_name="/home/ashok/bone_seg/task1/results/test_expanded.png")

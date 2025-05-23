@@ -2,7 +2,7 @@ import numpy as np
 import nibabel as nib
 from scipy.ndimage import binary_dilation
 import os
-from task1_1 import visualize_tibia_femur_slices
+from viz_seg import show_overlay_resampled , resample_mask_to_ct
 
 def load_ct_scan(file_path):
     return nib.load(file_path)
@@ -25,7 +25,7 @@ def expand_mask(mask_data, expansion_mm, voxel_spacing):
     struct_elem = get_structuring_element_for_mm(expansion_mm, voxel_spacing)
     return binary_dilation(mask_data, structure=struct_elem).astype(np.uint8)
 
-def process_and_save(mask_path, ct_data, expansion_mm=2.0):
+def process_and_save(mask_path, ct_img, bone_type, expansion_mm=2.0):
     img = load_ct_scan(mask_path)
     voxel_spacing = img.header.get_zooms()
     mask_data = img.get_fdata().astype(bool)
@@ -38,17 +38,19 @@ def process_and_save(mask_path, ct_data, expansion_mm=2.0):
     nib.save(expanded_img, output_path)
     
     print(f"Saved dilated mask to: {output_path}")
-    # if "femur" in mask_data:
-    #     visualize_tibia_femur_slices(ct_data, expand_mask, None, filename=os.path.join("results", 'femur_slices_expanded_2.png'))
-    # else:
-    #     visualize_tibia_femur_slices(ct_data, None, expanded_mask, filename=os.path.join("results", 'tibia_slices_expanded_2.png'))
+    mask_img = nib.load(output_path)
+    mask_resampled = resample_mask_to_ct(ct_img, mask_img)
+
+    if "femur" in bone_type:
+        show_overlay_resampled(ct_img, mask_resampled, fig_name=os.path.join("results", 'task1_2_femur_slices_expanded_2.png'))
+    else:
+        show_overlay_resampled(ct_img, mask_resampled, fig_name=os.path.join("results", 'task1_2_tibia_slices_expanded_2.png'),slice_index=0)
 
 
 
 # Run for both femur and tibia
 if __name__ == "__main__":
-    img = load_ct_scan("3702_left_knee.nii.gz")
-    ct_data = img.get_fdata()
-    print(f"{img.header.get_zooms()=}")
-    process_and_save('results/original_femur_segmentation.nii.gz', expansion_mm=4.0, ct_data = ct_data)
-    process_and_save('results/original_tibia_segmentation.nii.gz', expansion_mm=4.0, ct_data = ct_data)
+    ct_img = load_ct_scan("3702_left_knee.nii.gz")
+    print(f"{ct_img.header.get_zooms()=}")
+    process_and_save('results/original_femur_segmentation.nii.gz', expansion_mm=4.0, bone_type="femur", ct_img = ct_img)
+    process_and_save('results/original_tibia_segmentation.nii.gz', expansion_mm=4.0, bone_type="tibia", ct_img = ct_img)
