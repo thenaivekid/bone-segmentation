@@ -1,7 +1,3 @@
-Here's the short and correct markdown version of your documentation:
-
----
-
 # 🦴 Task 1: Bone Segmentation Using Image Processing only
 
 ## Task 1.1 – Bone Segmentation (Femur: Red, Tibia: Blue)
@@ -125,4 +121,3 @@ Here's the short and correct markdown version of your documentation:
    * Print coordinates to console.
    * Export landmark data to CSV.
 
----
