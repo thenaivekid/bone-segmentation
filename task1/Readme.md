@@ -3,6 +3,7 @@
 
 
 ### Task 1.1 – Bone Segmentation
+###### Red segments are femur and blue segments are tibia
  1. Data Loading
 - **Load CT Data**: Reads the .nii.gz file using nibabel to extract 3D CT scan data and spatial information
 
