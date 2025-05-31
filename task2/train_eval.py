@@ -137,12 +137,19 @@ def run_multiple_configurations(base_model, param_grid, save_file):
         #     "use_random_forest_selector": False,
         #     "n_components": 15
         # },
+        # {
+        #     "name": "PCA_10",
+        #     "high_cardinality_threshold": 99,
+        #     "corr_threshold": 0.9,
+        #     "use_random_forest_selector": False,
+        #     "n_components": 7# tested [5, 7, 10, 15, 20, 25, 30, 40]
+        # },
         {
-            "name": "PCA_10",
-            "high_cardinality_threshold": 99,
+            "name": "nothing",
+            "high_cardinality_threshold": 150,
             "corr_threshold": 0.9,
-            "use_random_forest_selector": False,
-            "n_components": 7# tested [5, 7, 10, 15, 20, 25, 30, 40]
+            "use_random_forest_selector": True,
+            "n_components": None
         },
     ]
     
@@ -213,17 +220,18 @@ def train_svc():
     # (best_config['train_f1'] - best_config['val_f1'])=-0.0522
     param_grid = {
         # 'C': [0.05, 0.5, 0.1,],  
-        'C': [0.5, 0.1,],  
+        'C': [ 0.1,],  
         # 'kernel': ['linear', 'rbf', 'poly', "sigmoid"],  
-        'kernel': ['poly', "sigmoid"],  
+        'kernel': ["sigmoid"],  
         # 'kernel': ['linear'],  
-        # 'gamma': ['scale', 'auto'],  
-        'gamma': ['scale', 0.001, 0.01, 0.1,],  
+        'gamma': ['scale', ],  
+        # 'gamma': ['scale', 0.001, 0.01, 0.1,],  
         # 'class_weight': ['balanced', None],
         'class_weight': ['balanced'],
         # 'degree': [2, 3, 4],
         'degree': [2, ],
-        'coef0': [0.0, 0.1, 1.0],
+        # 'coef0': [0.0, 0.1, 1.0],
+        'coef0': [ 0.1, ],
     }
     
     from sklearn.svm import SVC
@@ -264,11 +272,11 @@ def train_random_forest():
     # (best_config['train_f1'] - best_config['val_f1'])=0.2547
     param_grid = {
         # 'n_estimators': [50, 100, 200,300],
-        'n_estimators': [5, 10, 20, 50],
+        'n_estimators': [50],
         # 'max_depth': [5, 10, 15, 20],
-        'max_depth': [1, 2, 3, 5,],
-        'criterion': ['gini', 'entropy'],
-        'min_samples_split': [2, 5],
+        'max_depth': [5,],
+        # 'criterion': ['gini', 'entropy'],
+        'min_samples_split': [5],
         # 'min_samples_leaf': [1, 2],
         'min_samples_leaf': [2],
         'bootstrap': [ False],
@@ -403,8 +411,8 @@ def generate_all_predictions(X_test, trained_models_dict, output_dir="TASK_2/pre
 
 
 if __name__ == "__main__":
-    results_df = train_logistic_regression()
-    results_df = train_svc()
+    # results_df = train_logistic_regression()
+    # results_df = train_svc()
     results_df = train_random_forest()
     # results_df = train_decision_tree()
     # results_df = train_xgboost()

@@ -1,20 +1,3 @@
-# import pandas as pd
-
-# df = pd.read_csv("/teamspace/studios/this_studio/task2/results/baselines.csv")
-# print(df[["model", "val_accuracy", "train_accuracy", "val_auroc", "train_auroc", "val_recall", "train_recall", "val_specificity", "train_specificity", "val_f1", "train_f1"]])
-
-
-
-
-
-
-
-
-
-
-
-
-
 from sklearn.metrics import f1_score
 from preprocess_feature_engg import preprocess_feature_engg
 from sklearn.linear_model import LogisticRegression
@@ -103,6 +86,7 @@ def train_and_predict_all_models(train_csv, test_csv, blind_test_csv, output_dir
     
     results = {}
     trained_models = {}
+    # Store last y_train and y_test for evaluation
     last_y_train, last_y_test = None, None
 
     for model_name, config in model_configs.items():
@@ -117,7 +101,7 @@ def train_and_predict_all_models(train_csv, test_csv, blind_test_csv, output_dir
                 test_csv=blind_test_csv,
                 **config['preprocessing']
             )))
-            X_train, y_train, X_test, y_test, X_test = preprocess_feature_engg(
+            X_train, y_train, X_test, y_test, X_blinded_test = preprocess_feature_engg(
                 train_csv=train_csv,
                 val_csv=test_csv,
                 test_csv=blind_test_csv,
@@ -134,7 +118,7 @@ def train_and_predict_all_models(train_csv, test_csv, blind_test_csv, output_dir
             datasets = {
                 'train': (X_train, f"{model_name}_train_predictions.csv", y_train),
                 'test': (X_test, f"{model_name}_test_predictions.csv", y_test),
-                'blind_test': (X_test, f"{model_name}_blind_test_predictions.csv", None),
+                'blind_test': (X_blinded_test, f"{model_name}_blind_test_predictions.csv", None),
             }
             
             
@@ -165,9 +149,8 @@ def train_and_predict_all_models(train_csv, test_csv, blind_test_csv, output_dir
                 print(f"Saved predictions to: {filepath}")
                 print(f"Shape: {results_df.shape}")
                 if y_true is not None:
-                    f1 = f1_score(y_true, predictions)
-                    print(f"F1 Score for {dataset_name} set: {f1:.4f}")
-            
+                    print("*"*50)
+                    print(f"{model_name} {dataset_name} f1 score: {f1_score(y_true, predictions):.4f}")
             results[model_name] = model_results
             print(f"{model_name} completed successfully")
             
@@ -175,24 +158,14 @@ def train_and_predict_all_models(train_csv, test_csv, blind_test_csv, output_dir
             print(f"Error with {model_name}: {str(e)}")
             continue
 
-    print(f"\n{'='*60}")
-    print("SUMMARY")
-    print(f"{'='*60}")
-    print(f"Models trained: {len(trained_models)}")
-    print(f"Output directory: {output_dir}")
-    print("\nGenerated files:")
-    
-    for model_name in results:
-        for dataset_name in results[model_name]:
-            filepath = results[model_name][dataset_name]['filepath']
-            print(f"  - {filepath}")
-    
 
     return {
         'trained_models': trained_models,
         'predictions': results,
         'output_directory': output_dir
     }
+
+
 
 
 

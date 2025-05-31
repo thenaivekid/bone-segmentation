@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
-def preprocess_feature_engg(train_csv, val_csv, high_cardinality_threshold=10, corr_threshold=0.8, use_random_forest_selector=False, n_components=None,):
+def preprocess_feature_engg(train_csv, val_csv, test_csv = None, high_cardinality_threshold=10, corr_threshold=0.8, use_random_forest_selector=False, n_components=None,):
     df_train = pd.read_csv(train_csv)
     df_val = pd.read_csv(val_csv)
 
@@ -17,6 +17,7 @@ def preprocess_feature_engg(train_csv, val_csv, high_cardinality_threshold=10, c
     high_card_cols = [col for col in df_train.columns if df_train[col].nunique() > threshold]
     df_train = df_train.drop(columns=high_card_cols)
     df_val = df_val.drop(columns=high_card_cols)
+
     print(f"Dropped {len(high_card_cols)} high-cardinality features.")
 
     df_train = df_train.dropna(axis=1)
@@ -42,7 +43,10 @@ def preprocess_feature_engg(train_csv, val_csv, high_cardinality_threshold=10, c
     y_train = df_train["CLASS"]
     X_val = df_val.drop(columns=["CLASS"])
     y_val = df_val["CLASS"]
-
+    if test_csv:
+        df_test = pd.read_csv(test_csv)
+        df_test = df_test.drop(columns=constant_cols + high_card_cols + to_drop)
+        X_test = df_test[X_val.columns]
     if use_random_forest_selector:
         print("training random forest")
         clf = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -51,19 +55,28 @@ def preprocess_feature_engg(train_csv, val_csv, high_cardinality_threshold=10, c
         selected_features = importances[importances > 0.01].sort_values(ascending=False)
         X_train = X_train[selected_features.index]
         X_val = X_val[selected_features.index]
+        if test_csv:
+            X_test = X_test[selected_features.index]
         print(f"Selected {X_train.shape[1]} important features.")
 
     if n_components:
         pca = PCA(n_components=n_components)
         X_train = pca.fit_transform(X_train)
         X_val = pca.transform(X_val)
+        if test_csv:
+            X_test = pca.transform(X_test)
 
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_val = scaler.transform(X_val)
+    if test_csv:
+        X_test = scaler.transform(X_test)
 
     print(f"{X_train.shape=}, {y_train.shape=}, {X_val.shape=}, {y_val.shape=}")
-    return X_train, y_train, X_val, y_val
+    if test_csv is not None:
+        return X_train, y_train, X_val, y_val, X_test  
+    else:
+        return X_train, y_train, X_val, y_val
 
 
 if __name__ == "__main__":
