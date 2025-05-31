@@ -411,9 +411,9 @@ def generate_all_predictions(X_test, trained_models_dict, output_dir="TASK_2/pre
 
 
 if __name__ == "__main__":
-    # results_df = train_logistic_regression()
+    results_df = train_logistic_regression()
     # results_df = train_svc()
-    results_df = train_random_forest()
+    # results_df = train_random_forest()
     # results_df = train_decision_tree()
     # results_df = train_xgboost()
    

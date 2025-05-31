@@ -1,3 +1,4 @@
+# Binary classification of high dimensional tabular data
 # TODO
 
 - [x] handle unbalanced dataset
@@ -9,6 +10,26 @@
 - [ ] write code to use the ensemble of different types of model. use 3 top performing models to vote and get the average and see if it improves the test f1 score
 <!-- - [ ] save models -->
 
+# Sub-task 1: Predicted Probabilities
+
+The predicted probabilities for each algorithm and dataset are stored in the `./TASK_2/final_predictions` directory.
+
+### Logistic Regression
+- `logistic_regression_train_predictions.csv`
+- `logistic_regression_test_predictions.csv`
+- `logistic_regression_blind_test_predictions.csv`
+
+### Random Forest
+- `random_forest_train_predictions.csv`
+- `random_forest_test_predictions.csv`
+- `random_forest_blind_test_predictions.csv`
+
+### Support Vector Classifier (SVC)
+- `svc_train_predictions.csv`
+- `svc_test_predictions.csv`
+- `svc_blind_test_predictions.csv`
+
+# Sub-task 2: Documentation of Methodology
 ## Data preprocessing & feature engineering steps
 ### EDA
 First, I loaded the train and test sets using pandas and played around to familiarize myself with the task at hand.

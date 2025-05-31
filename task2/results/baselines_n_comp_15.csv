@@ -1,2 +1,0 @@
-,model,high_cardinality_threshold,corr_threshold,use_rf_selector,n_components,train_accuracy,train_auroc,train_recall,train_specificity,train_f1,val_accuracy,val_auroc,val_recall,val_specificity,val_f1
-0,LogisticRegression,100,1,False,,0.7428571428571429,0.8082249619996621,0.75,0.7382198952879581,0.6966292134831461,0.63,0.617816091954023,0.5476190476190477,0.6896551724137931,0.5542168674698795

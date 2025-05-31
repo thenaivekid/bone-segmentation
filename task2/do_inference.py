@@ -116,27 +116,28 @@ def train_and_predict_all_models(train_csv, test_csv, blind_test_csv, output_dir
             trained_models[model_name] = model
             
             datasets = {
-                'train': (X_train, f"{model_name}_train_predictions.csv", y_train),
-                'test': (X_test, f"{model_name}_test_predictions.csv", y_test),
-                'blind_test': (X_blinded_test, f"{model_name}_blind_test_predictions.csv", None),
+                'train': (X_train, f"{model_name}_train_predictions.csv", y_train, pd.read_csv(train_csv)['ID']),
+                'test': (X_test, f"{model_name}_test_predictions.csv", y_test, pd.read_csv(test_csv)['ID']),
+                'blind_test': (X_blinded_test, f"{model_name}_blind_test_predictions.csv", None, pd.read_csv(blind_test_csv)['ID']),
             }
             
             
             model_results = {}
             
-            for dataset_name, (X_data, filename, y_true) in datasets.items():
+            for dataset_name, (X_data, filename, y_true, ids) in datasets.items():
                 print(f"Generating predictions for {dataset_name} set...")
                 
                 probabilities = model.predict_proba(X_data)
                 predictions = model.predict(X_data)
                 
                 results_df = pd.DataFrame()
-                results_df['ID'] = range(len(X_data))
+                
+                results_df['ID'] = ids
                 
                 for i, class_label in enumerate(model.classes_):
                     results_df[f'prob_class_{class_label}'] = probabilities[:, i]
                 
-                results_df['predicted_class'] = predictions
+                # results_df['predicted_class'] = predictions
                 
                 filepath = os.path.join(output_dir, filename)
                 results_df.to_csv(filepath, index=False)
