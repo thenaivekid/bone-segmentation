@@ -1,5 +1,10 @@
 # Binary classification of high dimensional tabular data
 
+1. `preprocess_feature_engg.py` contains code for preprocessing and feature extraction
+2. `eda.py` includes the code i used for my eda
+3. `train_eval.py` includes code for training, grid searching different algorithms and hyperparameters
+4. `do_inference.py` contains code used for final  inference and saving results to csv file
+5. `view_experiment_logs.py` contains code i used to view the results of training.
 # Sub-task 1: Predicted Probabilities
 
 The predicted probabilities for each algorithm and dataset are stored in the `./TASK_2/final_predictions` directory.
