@@ -1,14 +1,4 @@
 # Binary classification of high dimensional tabular data
-# TODO
-
-- [x] handle unbalanced dataset
-- [x] grid search for hyperparameter tuning for best 3 algos
-- [x] do inference on 3 best models with higher tolerance for high cardinality like 200 +
-- [x] write to do inference on the best 3 models
-    - [x] save table that stores key hyper parameters 5 eval metrics for each algos
-- [x] write code to save the result on blind test set
-- [ ] write code to use the ensemble of different types of model. use 3 top performing models to vote and get the average and see if it improves the test f1 score
-<!-- - [ ] save models -->
 
 # Sub-task 1: Predicted Probabilities
 
@@ -138,7 +128,7 @@ First, I loaded the train and test sets using pandas and played around to famili
 | Specificity | 0.4450 |
 | F1-Score | 0.6145 |
 
-### Validation Metrics 
+##### Validation Metrics 
 | Metric | Value |
 |--------|-------|
 | Accuracy | 0.6400 |
@@ -147,6 +137,26 @@ First, I loaded the train and test sets using pandas and played around to famili
 | Specificity | 0.4828 |
 | F1-Score | 0.6667 |
 
+
+#### Ensemble Model(Equal voting of top 3 algorithms' models) Results
+
+##### Train Metrics
+| Metric | Value |
+|--------|-------|
+| Accuracy | 0.6635 |
+| AUROC | 0.6635 |
+| Recall | 0.8226 |
+| Specificity | 0.5602 |
+| F1-Score | 0.6581 |
+
+##### Test Metrics
+| Metric | Value |
+|--------|-------|
+| Accuracy | 0.6800 |
+| AUROC | 0.6800 |
+| Recall | 0.7857 |
+| Specificity | 0.6034 |
+| F1-Score | 0.6735 |
 
 ## A short discussion of strengths, limitations, and how you would improve the model with more time.
 
@@ -177,3 +187,13 @@ First, I loaded the train and test sets using pandas and played around to famili
 
 
 
+<!-- ## TODO
+
+- [x] handle unbalanced dataset
+- [x] grid search for hyperparameter tuning for best 3 algos
+- [x] do inference on 3 best models with higher tolerance for high cardinality like 200 +
+- [x] write to do inference on the best 3 models
+    - [x] save table that stores key hyper parameters 5 eval metrics for each algos
+- [x] write code to save the result on blind test set
+- [x] write code to use the ensemble of different types of model. use 3 top performing models to vote and get the average and see if it improves the test f1 score
+- [ ] save models -->
