@@ -44,7 +44,7 @@ def train_model_with_grid_search(base_model, param_grid, high_cardinality_thresh
     grid_search = GridSearchCV(
         estimator=base_model,
         param_grid=param_grid,
-        cv=10,
+        cv=3,
         scoring='f1',
         n_jobs=-1,
         verbose=0
@@ -87,56 +87,56 @@ def run_multiple_configurations(base_model, param_grid, save_file):
     """Run grid search with different preprocessing configurations"""
     
     configurations = [
-        {
-            "name": "Base",
-            "high_cardinality_threshold": 100,
-            "corr_threshold": 1,
-            "use_random_forest_selector": False,
-            "n_components": None
-        },
-        {
-            "name": "Aggressive_Filtering",
-            "high_cardinality_threshold": 50,
-            "corr_threshold": 0.9,
-            "use_random_forest_selector": False,
-            "n_components": None
-        },
+        # {
+        #     "name": "Base",
+        #     "high_cardinality_threshold": 100,
+        #     "corr_threshold": 1,
+        #     "use_random_forest_selector": False,
+        #     "n_components": None
+        # },
+        # {
+        #     "name": "Aggressive_Filtering",
+        #     "high_cardinality_threshold": 50,
+        #     "corr_threshold": 0.9,
+        #     "use_random_forest_selector": False,
+        #     "n_components": None
+        # },
         
-        {
-            "name": "RF_Selector",
-            "high_cardinality_threshold": 150,
-            "corr_threshold": 0.9,
-            "use_random_forest_selector": True,
-            "n_components": None
-        },
-        {
-            "name": "PCA_40",
-            "high_cardinality_threshold": 100,
-            "corr_threshold": 0.9,
-            "use_random_forest_selector": False,
-            "n_components": 40
-        },
-        {
-            "name": "PCA_25",
-            "high_cardinality_threshold": 100,
-            "corr_threshold": 0.9,
-            "use_random_forest_selector": False,
-            "n_components": 25
-        },
-        {
-            "name": "PCA_20",
-            "high_cardinality_threshold": 98,
-            "corr_threshold": 0.9,
-            "use_random_forest_selector": False,
-            "n_components": 20
-        },
-        {
-            "name": "PCA_15",
-            "high_cardinality_threshold": 98,
-            "corr_threshold": 0.9,
-            "use_random_forest_selector": False,
-            "n_components": 15
-        },
+        # {
+        #     "name": "RF_Selector",
+        #     "high_cardinality_threshold": 150,
+        #     "corr_threshold": 0.9,
+        #     "use_random_forest_selector": True,
+        #     "n_components": None
+        # },
+        # {
+        #     "name": "PCA_40",
+        #     "high_cardinality_threshold": 100,
+        #     "corr_threshold": 0.9,
+        #     "use_random_forest_selector": False,
+        #     "n_components": 40
+        # },
+        # {
+        #     "name": "PCA_25",
+        #     "high_cardinality_threshold": 100,
+        #     "corr_threshold": 0.9,
+        #     "use_random_forest_selector": False,
+        #     "n_components": 25
+        # },
+        # {
+        #     "name": "PCA_20",
+        #     "high_cardinality_threshold": 98,
+        #     "corr_threshold": 0.9,
+        #     "use_random_forest_selector": False,
+        #     "n_components": 20
+        # },
+        # {
+        #     "name": "PCA_15",
+        #     "high_cardinality_threshold": 98,
+        #     "corr_threshold": 0.9,
+        #     "use_random_forest_selector": False,
+        #     "n_components": 15
+        # },
         {
             "name": "PCA_10",
             "high_cardinality_threshold": 99,
@@ -185,10 +185,10 @@ def train_logistic_regression():
     """Train a logistic regression model with default parameters"""
     ## the best #  PCA_10 val f1:0.673684 {'C': 0.1, 'class_weight': 'balanced', 'l1_ratio': 0.9, 'max_iter': 1000, 'penalty': 'elasticnet', 'solver': 'saga'}
     param_grid = {
-        'C': [0.05, 0.1, 0.5, ],  
-        # 'C': [0.1, ],  
-        'penalty': ['l1', 'l2', 'elasticnet'],
-        # 'penalty': [ 'elasticnet'], 
+        # 'C': [0.05, 0.1, 0.5, ],  
+        'C': [0.1, ],  
+        # 'penalty': ['l1', 'l2', 'elasticnet'],
+        'penalty': [ 'elasticnet'], 
         'solver': ['liblinear', 'saga'], 
         'solver': ['saga'], 
         'class_weight': ['balanced'],
@@ -257,6 +257,7 @@ def train_decision_tree():
 
 def train_random_forest():
     """Train a Random Forest Classifier with default parameters"""
+    
     # best_config['config_name']='RF_Selector'
     # best_config['val_f1']=0.6024
     # best_config['best_params']={'bootstrap': False, 'class_weight': 'balanced', 'max_depth': 5, 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 50}
@@ -286,101 +287,127 @@ def train_xgboost():
     """Train an XGBoost Classifier with default parameters"""
     import xgboost as xgb
     param_grid = {
-        'n_estimators': [50, 100, 200, 300],
-        'max_depth': [3, 5, 4],
-        'learning_rate': [0.01, 0.1, 0.2],
-        'subsample': [0.8, 1.0],
-        'colsample_bytree': [0.8, 1.0],
-        'gamma': [0, 0.1, 0.2],
-        'reg_alpha': [0, 0.1, 1],
-        'reg_lambda': [1, 5, 10],
-        'scale_pos_weight': [1, 2, 3],
-        'min_child_weight': [1, 3, 5],
+        'n_estimators': [300],
+        # 'n_estimators': [50,20, 10,],
+        'max_depth': [3],
+        # 'learning_rate': [3, 0.2, 1],
+        # 'subsample': [0.8, 1.0],
+        # 'colsample_bytree': [0.8, 1.0],
+        # 'gamma': [0, 0.1, 0.2],
+        # 'reg_alpha': [0.1, 1,5],
+        # 'reg_lambda': [1, 5, 10],
+        # 'scale_pos_weight': [1],
+        # 'min_child_weight': [5],
     }
     base_model = xgb.XGBClassifier(eval_metric='logloss', random_state=42)
     results_df = run_multiple_configurations(base_model, param_grid, save_file="TASK_2/xgboost_results.csv")
     return results_df
 
 
-
-def train_ridge_classifier():
-   """Train a Ridge Classifier with default parameters"""
-   from sklearn.linear_model import RidgeClassifier
+def save_predictions_to_csv(X, model, csv_filename, id_column=None):
+   """
+   Generate predictions and save class probabilities to CSV
    
-   param_grid = {
-       'alpha': [0.1, 0.5, 1.0, 5.0, 10.0, 50.0, 100.0],
-       'fit_intercept': [True, False],
-       'class_weight': ['balanced', None],
-       'solver': ['auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga'],
-       'max_iter': [1000, 2000, 5000],
-       'tol': [1e-3, 1e-4, 1e-5]
-   }
+   Parameters:
+   -----------
+   X : array-like or DataFrame
+       Processed feature data for inference
+   model : trained sklearn model
+       Already trained model with predict_proba method
+   csv_filename : str
+       Name of the CSV file to save predictions
+   id_column : array-like, optional
+       ID values for each sample. If None, will create sequential IDs
    
-   base_model = RidgeClassifier(random_state=42)
-   results_df = run_multiple_configurations(base_model, param_grid, save_file="TASK_2/ridge_classifier_results.csv")
+   Returns:
+   --------
+   pandas.DataFrame : DataFrame with predictions saved to CSV
+   """
+   import pandas as pd
+   import numpy as np
+   
+   # Get class probabilities
+   try:
+       probabilities = model.predict_proba(X)
+   except AttributeError:
+       raise ValueError("Model must have predict_proba method for probability predictions")
+   
+   # Get class labels
+   if hasattr(model, 'classes_'):
+       class_labels = model.classes_
+   else:
+       # Fallback for models without classes_ attribute
+       class_labels = [f'class_{i}' for i in range(probabilities.shape[1])]
+   
+   # Create ID column if not provided
+   if id_column is None:
+       id_column = np.arange(len(X))
+   
+   # Create DataFrame
+   results_df = pd.DataFrame()
+   results_df['ID'] = id_column
+   
+   # Add probability columns for each class
+   for i, class_label in enumerate(class_labels):
+       results_df[f'prob_class_{class_label}'] = probabilities[:, i]
+   
+   # Add predicted class column (optional, but often useful)
+   predicted_classes = model.predict(X)
+   results_df['predicted_class'] = predicted_classes
+   
+   # Save to CSV
+   results_df.to_csv(csv_filename, index=False)
+   
+   print(f"Predictions saved to {csv_filename}")
+   print(f"Shape: {results_df.shape}")
+   print(f"Columns: {list(results_df.columns)}")
+   
    return results_df
 
-def train_linear_svc():
-   """Train a Linear SVC with default parameters"""
-   from sklearn.svm import LinearSVC
+# Example usage function for your workflow
+def generate_all_predictions(X_test, trained_models_dict, output_dir="TASK_2/predictions"):
+   """
+   Generate predictions for multiple trained models
    
-   param_grid = {
-       'C': [0.001, 0.01, 0.1, 0.5, 1.0, 5.0, 10.0, 50.0],
-       'penalty': ['l1', 'l2'],
-       'loss': ['hinge', 'squared_hinge'],
-       'dual': [True, False],
-       'class_weight': ['balanced', None],
-       'max_iter': [1000, 2000, 5000],
-       'tol': [1e-4, 1e-5, 1e-6]
-   }
+   Parameters:
+   -----------
+   X_test : array-like
+       Test/inference data
+   trained_models_dict : dict
+       Dictionary with model_name: trained_model pairs
+   output_dir : str
+       Directory to save prediction files
+   """
+   import os
    
-   base_model = LinearSVC(random_state=42)
-   results_df = run_multiple_configurations(base_model, param_grid, save_file="TASK_2/linear_svc_results.csv")
-   return results_df
-
-def train_complement_naive_bayes():
-   """Train a Complement Naive Bayes classifier"""
-   from sklearn.naive_bayes import ComplementNB
+   # Create output directory if it doesn't exist
+   os.makedirs(output_dir, exist_ok=True)
    
-   param_grid = {
-       'alpha': [0.1, 0.5, 1.0, 2.0, 5.0, 10.0],
-       'fit_prior': [True, False],
-       'class_prior': [None],
-       'norm': [True, False]
-   }
+   all_predictions = {}
    
-   base_model = ComplementNB()
-   results_df = run_multiple_configurations(base_model, param_grid, save_file="TASK_2/complement_nb_results.csv")
-   return results_df
-
-def train_knn():
-   """Train a K-Nearest Neighbors classifier"""
-   from sklearn.neighbors import KNeighborsClassifier
+   for model_name, model in trained_models_dict.items():
+       csv_filename = f"{output_dir}/{model_name}_predictions.csv"
+       
+       try:
+           predictions_df = save_predictions_to_csv(
+               X=X_test,
+               model=model,
+               csv_filename=csv_filename
+           )
+           all_predictions[model_name] = predictions_df
+           
+       except Exception as e:
+           print(f"Error generating predictions for {model_name}: {str(e)}")
    
-   param_grid = {
-       'n_neighbors': [3, 5, 7, 9, 11, 15, 21],
-       'weights': ['uniform', 'distance'],
-       'algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute'],
-       'leaf_size': [20, 30, 40, 50],
-       'p': [1, 2],  # 1 for manhattan, 2 for euclidean
-       'metric': ['minkowski', 'euclidean', 'manhattan']
-   }
-   
-   base_model = KNeighborsClassifier()
-   results_df = run_multiple_configurations(base_model, param_grid, save_file="TASK_2/knn_results.csv")
-   return results_df
+   return all_predictions
 
 
 if __name__ == "__main__":
-    # results_df = train_logistic_regression()
-    # results_df = train_svc()
+    results_df = train_logistic_regression()
+    results_df = train_svc()
+    results_df = train_random_forest()
     # results_df = train_decision_tree()
-    # results_df = train_random_forest()
     # results_df = train_xgboost()
-    results_df = train_ridge_classifier()
-    results_df = train_linear_svc()
-    results_df = train_complement_naive_bayes()
-    results_df = train_knn()
    
     best_config = results_df.iloc[0]
     print(f"\nBEST CONFIG:")

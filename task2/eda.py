@@ -5,7 +5,7 @@ from pandas._libs.hashtable import value_count
 
 warnings.filterwarnings("ignore")
 
-df = pd.read_csv("/teamspace/studios/this_studio/task2/TASK_2/train_set.csv")
+df = pd.read_csv("TASK_2/train_set.csv")
 # print(f"{df.head(10)=}")
 
 print(f"{df.shape=}")

@@ -1,0 +1,2 @@
+model,best_params,cv_f1_score,high_cardinality_threshold,corr_threshold,use_rf_selector,n_components,train_accuracy,train_auroc,train_recall,train_specificity,train_f1,val_accuracy,val_auroc,val_recall,val_specificity,val_f1,config_name
+LogisticRegression_GridSearch,"{'max_depth': 3, 'n_estimators': 300}",0.40243168412182495,99,0.9,False,7,1.0,1.0,1.0,1.0,1.0,0.65,0.6330049261083743,0.47619047619047616,0.7758620689655172,0.5333333333333333,PCA_10
