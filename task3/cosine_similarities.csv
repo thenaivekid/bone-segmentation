@@ -1,0 +1,4 @@
+comparison,features_denseblock4_denselayer14_conv2,features_denseblock4_denselayer15_conv2,features_denseblock4_denselayer16_conv2
+tibia_vs_femur,0.957980,0.996186,0.994155
+tibia_vs_background,0.746556,0.820464,0.857985
+femur_vs_background,0.758163,0.829344,0.874675
