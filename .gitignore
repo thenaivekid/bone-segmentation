@@ -1,1 +1,4 @@
 */__pycache__/
+*/*.nii.gz
+*/atlas_results/
+*/get_bg_atlas.py
